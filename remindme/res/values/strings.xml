@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Remind Me</string>
+    <string name="add_new">Add New</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="description">Description</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="title">Title</string>
+    <string name="urgency">Urgency</string>
+    <string name="test">Test</string>
+</resources>
