@@ -1,20 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="20dp">
 
     <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/textView"/>
+            android:id="@+id/titleTextView" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/deleteIcon" android:text="test" android:textSize="30dp"/>
     <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/textView2" android:lines="3" android:maxLines="3"/>
-</LinearLayout>
+            android:id="@+id/descriptionTextView" android:layout_below="@+id/titleTextView" android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/deleteIcon" android:text="test" android:textSize="24dp" android:maxLines="3"/>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/alarmIcon"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_action_alarm"
+            android:paddingTop="60dp"
+            android:paddingRight="60dp"/>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/deleteIcon"
+            android:layout_toLeftOf="@+id/alarmIcon"
+            android:background="@drawable/ic_action_discard"
+            android:paddingTop="60dp"
+            android:paddingRight="60dp"/>
+</RelativeLayout>

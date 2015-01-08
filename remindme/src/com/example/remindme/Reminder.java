@@ -6,8 +6,7 @@ package com.example.remindme;
  */
 public class Reminder {
     private int id;
-    private String title;
-    private String description;
+    private String title, description;
 
     public Reminder(){
 

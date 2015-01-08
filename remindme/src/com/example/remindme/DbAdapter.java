@@ -43,6 +43,7 @@ public class DbAdapter extends SQLiteOpenHelper {
     }
 
     //Create, read, upgrade, delete ops
+    //add new
     public void addReminder(Reminder reminder) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -53,7 +54,7 @@ public class DbAdapter extends SQLiteOpenHelper {
         db.insert(TABLE_REMIND, null, values);
         db.close();
     }
-
+    //get single
     public Reminder getReminder(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -69,10 +70,11 @@ public class DbAdapter extends SQLiteOpenHelper {
         return reminder;
     }
 
+    //getall
     public List<Reminder> getAllReminders() {
         List<Reminder> reminderList = new ArrayList<Reminder>();
 
-        String selectQuery = "SELECT * FROM " + TABLE_REMIND;
+        String selectQuery = "SELECT * FROM " + TABLE_REMIND + " ORDER BY " + KEY_TITLE;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -90,4 +92,42 @@ public class DbAdapter extends SQLiteOpenHelper {
 
         return reminderList;
     }
+
+    /*update
+    * public int updateContact(Contact contact) {
+    SQLiteDatabase db = this.getWritableDatabase();
+
+    ContentValues values = new ContentValues();
+    values.put(KEY_NAME, contact.getName());
+    values.put(KEY_PH_NO, contact.getPhoneNumber());
+
+    // updating row
+    return db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",
+            new String[] { String.valueOf(contact.getID()) });
+    }*/
+
+    public int updateReminder(Reminder reminder){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_TITLE, reminder.getTitle());
+        values.put(KEY_DESCRIPTION, reminder.getDescription());
+
+        return db.update(TABLE_REMIND, values, KEY_ID + " = ?",
+                new String[] {String.valueOf(reminder.getId()) });
+    }
+
+    /*public void deleteContact(Contact contact) {
+    SQLiteDatabase db = this.getWritableDatabase();
+    db.delete(TABLE_CONTACTS, KEY_ID + " = ?",
+            new String[] { String.valueOf(contact.getID()) });
+    db.close();
 }
+    * */
+
+    public void deleteReminder(Reminder reminder) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_REMIND, KEY_ID + " = ?",
+                new String[] { String.valueOf(reminder.getId()) });
+    }
+ }
