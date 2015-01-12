@@ -19,11 +19,11 @@ public class ListViewAdapter extends ArrayAdapter<Reminder> {
     Context context;
     int layoutResourceId;
     List<Reminder> reminds;
-    DbAdapter dbAdapter;
+    DbAdapter adapter;
 
     public ListViewAdapter(Context context, int layoutResourceId, List<Reminder> reminds) {
         super(context, layoutResourceId, reminds);
-        dbAdapter = new DbAdapter(context);
+        adapter = new DbAdapter(context);
 
         this.context = context;
         this.layoutResourceId = layoutResourceId;
@@ -45,7 +45,7 @@ public class ListViewAdapter extends ArrayAdapter<Reminder> {
         TextView descriptionTextView = (TextView) convertView.findViewById(R.id.descriptionTextView);
         descriptionTextView.setText(remindItem.getDescription());
 
-        ImageView alarmImage = (ImageView) convertView.findViewById(R.id.alarmIcon);
+        /*ImageView alarmImage = (ImageView) convertView.findViewById(R.id.alarmIcon);
         alarmImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,10 +59,19 @@ public class ListViewAdapter extends ArrayAdapter<Reminder> {
             public void onClick(View v){
                 Toast.makeText(context, "deleting", Toast.LENGTH_LONG).show();
                 //dbAdapter.getReminder(position).getTitle();
-                dbAdapter.deleteReminder(reminds.get(position));
+                adapter.deleteReminder(reminds.get(position));
+                notifyDataSetChanged();
+                //refresh(adapter.getAllReminders());
+                //adapter.getAllReminders();
             }
-        });
+        });*/
 
         return convertView;
+    }
+
+    public void refresh(List<Reminder> reminds)
+    {
+        this.reminds = reminds;
+        notifyDataSetChanged();
     }
 }

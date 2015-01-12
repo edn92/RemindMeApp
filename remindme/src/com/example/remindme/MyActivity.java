@@ -3,10 +3,8 @@ package com.example.remindme;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -17,7 +15,8 @@ public class MyActivity extends Activity {
      * Called when the activity is first created.
      */
     DbAdapter adapter;
-    List<Reminder> reminders;
+    ListViewAdapter listAdapter;
+    List<Reminder> reminds;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,11 +24,20 @@ public class MyActivity extends Activity {
         setContentView(R.layout.listview);
 
         adapter = new DbAdapter(this);
-        reminders = adapter.getAllReminders();
+        this.reminds = adapter.getAllReminders();
 
-        ListViewAdapter listAdapter = new ListViewAdapter(this, R.layout.listview_row, reminders);
-        ListView listViewItems = (ListView) findViewById(R.id.list);
-        listViewItems.setAdapter(listAdapter);
+        listAdapter = new ListViewAdapter(this, R.layout.listview_row, reminds);
+        //listAdapter = new ListViewAdapter(this, R.layout.listview_row, adapter.getAllReminders());
+
+        ListView list = (ListView) findViewById(R.id.list);
+        list.setAdapter(listAdapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showToast("selected " + position);
+            }
+        });
+        registerForContextMenu(list);
     }
 
     @Override
@@ -54,9 +62,41 @@ public class MyActivity extends Activity {
         }
     }
 
-    /*public void onListItemClick(ListView parent, View v, int position, long id){
-        showToast("You have selected " + reminders.get(position).getTitle());
-    }*/
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, view, menuInfo);
+
+        menu.add(0, 0, 0, "Edit");
+        menu.add(0, 1, 1, "Set Alarm");
+        menu.add(0, 2, 2, "Delete");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        switch (item.getItemId()) {
+            case 0:
+                showToast("selected: " + menuInfo.position);
+                break;
+            case 1:
+                showToast("adding: " + menuInfo.position);
+                break;
+            case 2:
+                showToast("deleted: " + menuInfo.position);
+                adapter.deleteReminder(reminds.get(menuInfo.position));
+                //listAdapter.refresh(adapter.getAllReminders());
+                //listAdapter.notifyDataSetChanged();
+                //adapter.deleteReminder(adapter.getReminder(menuInfo.position));
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        listAdapter.refresh(adapter.getAllReminders());
+    }
 
     private void showToast(String s){
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
