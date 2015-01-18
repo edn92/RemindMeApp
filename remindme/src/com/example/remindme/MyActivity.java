@@ -1,14 +1,12 @@
 package com.example.remindme;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.view.*;
+import android.widget.*;
 
 import java.util.List;
 
@@ -17,7 +15,8 @@ public class MyActivity extends Activity {
      * Called when the activity is first created.
      */
     DbAdapter adapter;
-    List<Reminder> reminders;
+    ListViewAdapter listAdapter;
+    List<Reminder> reminds;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,11 +24,19 @@ public class MyActivity extends Activity {
         setContentView(R.layout.listview);
 
         adapter = new DbAdapter(this);
-        reminders = adapter.getAllReminders();
+        this.reminds = adapter.getAllReminders();
 
-        ListViewAdapter listAdapter = new ListViewAdapter(this, R.layout.listview_row, reminders);
-        ListView listViewItems = (ListView) findViewById(R.id.list);
-        listViewItems.setAdapter(listAdapter);
+        listAdapter = new ListViewAdapter(this, R.layout.listview_row, reminds);
+
+        ListView list = (ListView) findViewById(R.id.list);
+        list.setAdapter(listAdapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showDetailedDialog(position);
+            }
+        });
+        registerForContextMenu(list);
     }
 
     @Override
@@ -54,10 +61,43 @@ public class MyActivity extends Activity {
         }
     }
 
-    /*public void onListItemClick(ListView parent, View v, int position, long id){
-        showToast("You have selected " + reminders.get(position).getTitle());
-    }*/
+    private void showDetailedDialog(final int i){
+        View layout = getLayoutInflater().inflate(R.layout.details_dialog, null);
 
+        //binding title and description to textviews
+        TextView descriptionTextView = (TextView) layout.findViewById(R.id.descriptionTextView) ;
+        descriptionTextView.setText(reminds.get(i).getDescription());
+        TextView titleTextView = (TextView) layout.findViewById(R.id.titleTextView);
+        titleTextView.setText(reminds.get(i).getTitle());
+
+        Button deleteButton = (Button) layout.findViewById(R.id.deleteButton);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showConfirmationDialog(i);
+            }
+        });
+
+        Button setAlarmButton = (Button) layout.findViewById(R.id.setAlarmButton);
+        setAlarmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alarmDialog();
+            }
+        });
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(layout);
+        builder.create().show();
+    }
+
+    private void showConfirmationDialog(int i){
+        showToast("" + i);
+    }
+
+    private void alarmDialog(){
+
+    }
     private void showToast(String s){
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }

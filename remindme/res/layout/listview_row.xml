@@ -8,27 +8,17 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/titleTextView" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/deleteIcon" android:text="test" android:textSize="30dp"/>
+            android:id="@+id/titleTextView" android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:text="test"
+            android:textSize="30dp"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/descriptionTextView" android:layout_below="@+id/titleTextView" android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/deleteIcon" android:text="test" android:textSize="24dp" android:maxLines="3"/>
-    <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/alarmIcon"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/ic_action_alarm"
-            android:paddingTop="60dp"
-            android:paddingRight="60dp"/>
-    <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/deleteIcon"
-            android:layout_toLeftOf="@+id/alarmIcon"
-            android:background="@drawable/ic_action_discard"
-            android:paddingTop="60dp"
-            android:paddingRight="60dp"/>
+            android:id="@+id/descriptionTextView"
+            android:layout_below="@+id/titleTextView"
+            android:layout_alignParentLeft="true"
+            android:text="test"
+            android:textSize="24dp"
+            android:maxLines="3"/>
 </RelativeLayout>

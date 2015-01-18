@@ -117,14 +117,6 @@ public class DbAdapter extends SQLiteOpenHelper {
                 new String[] {String.valueOf(reminder.getId()) });
     }
 
-    /*public void deleteContact(Contact contact) {
-    SQLiteDatabase db = this.getWritableDatabase();
-    db.delete(TABLE_CONTACTS, KEY_ID + " = ?",
-            new String[] { String.valueOf(contact.getID()) });
-    db.close();
-}
-    * */
-
     public void deleteReminder(Reminder reminder) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_REMIND, KEY_ID + " = ?",
