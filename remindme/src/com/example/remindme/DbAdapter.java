@@ -93,18 +93,27 @@ public class DbAdapter extends SQLiteOpenHelper {
         return reminderList;
     }
 
-    /*update
-    * public int updateContact(Contact contact) {
-    SQLiteDatabase db = this.getWritableDatabase();
+    public int getDatabaseSize() {
+        List<Reminder> reminderList = new ArrayList<Reminder>();
 
-    ContentValues values = new ContentValues();
-    values.put(KEY_NAME, contact.getName());
-    values.put(KEY_PH_NO, contact.getPhoneNumber());
+        String selectQuery = "SELECT * FROM " + TABLE_REMIND + " ORDER BY " + KEY_TITLE;
 
-    // updating row
-    return db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",
-            new String[] { String.valueOf(contact.getID()) });
-    }*/
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Reminder reminder = new Reminder();
+                reminder.setId(Integer.parseInt(cursor.getString(0)));
+                reminder.setTitle(cursor.getString(1));
+                reminder.setDescription(cursor.getString(2));
+
+                reminderList.add(reminder);
+            } while (cursor.moveToNext());
+        }
+
+        return reminderList.size();
+    }
 
     public int updateReminder(Reminder reminder){
         SQLiteDatabase db = this.getWritableDatabase();

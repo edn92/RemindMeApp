@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Created by Edward on 12/12/2014.
+ * Adds a new reminder to the database.
  */
 public class NewReminder extends Activity {
     private String title, description;
@@ -25,8 +26,8 @@ public class NewReminder extends Activity {
     }
 
     public void AddNew(View view){
-        description = ((EditText)findViewById(R.id.description_editText)).getText().toString();
-        title = ((EditText)findViewById(R.id.title_editText)).getText().toString();
+        title = ((EditText)findViewById(R.id.titleEdit)).getText().toString();
+        description = ((EditText)findViewById(R.id.descriptionEdit)).getText().toString();
 
         if (title.length() == 0){
             showToast("Please add a title.");

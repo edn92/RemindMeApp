@@ -4,42 +4,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="Cancel"
-            android:text="@string/cancel"
-            android:id="@+id/deleteButton" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"/>
-    <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="AddNew"
-            android:text="@string/add"
-            android:id="@+id/setAlarmButton" android:layout_alignParentTop="true" android:layout_toRightOf="@+id/deleteButton"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/description"
-            android:id="@+id/titleTextView" android:layout_below="@+id/deleteButton" android:layout_alignParentLeft="true"/>
-    <EditText
-            android:id="@+id/description_editText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/setAlarmButton" android:layout_toRightOf="@+id/titleTextView"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/title"
-            android:id="@+id/textView2" android:layout_below="@+id/description_editText"
-            android:layout_alignParentLeft="true"/>
+            android:id="@+id/titleText" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+            android:textSize="32dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/description"
+            android:id="@+id/textView3" android:layout_below="@+id/titleText" android:layout_alignParentLeft="true"
+            android:textSize="32dp"/>
     <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/title_editText"
-            android:layout_below="@+id/description_editText"
-            android:layout_alignLeft="@+id/description_editText"/>
+            android:id="@+id/titleEdit" android:layout_alignParentTop="true" android:layout_toRightOf="@+id/titleText"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/descriptionEdit" android:layout_below="@+id/titleEdit" android:layout_toRightOf="@+id/textView3"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add"
+            android:id="@+id/addButton"
+            android:layout_below="@+id/textView3"
+            android:layout_alignParentLeft="true"
+            android:onClick="AddNew"
+            android:layout_marginTop="115dp"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Button"
+            android:id="@+id/button2" android:layout_alignBottom="@+id/addButton" android:layout_toRightOf="@+id/addButton"/>
 </RelativeLayout>

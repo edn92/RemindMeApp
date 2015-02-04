@@ -1,22 +1,20 @@
 package com.example.remindme;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.*;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class MyActivity extends Activity {
     /**
      * Called when the activity is first created.
      */
-    DbAdapter adapter;
-    ListViewAdapter listAdapter;
-    List<Reminder> reminds;
+    private DbAdapter adapter;
+    private ExpandableListAdapter mAdapter;
+    private ExpandableListView expListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,19 +22,12 @@ public class MyActivity extends Activity {
         setContentView(R.layout.listview);
 
         adapter = new DbAdapter(this);
-        this.reminds = adapter.getAllReminders();
 
-        listAdapter = new ListViewAdapter(this, R.layout.listview_row, reminds);
+        expListView = (ExpandableListView)findViewById(R.id.list);
 
-        ListView list = (ListView) findViewById(R.id.list);
-        list.setAdapter(listAdapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showDetailedDialog(position);
-            }
-        });
-        registerForContextMenu(list);
+        mAdapter = new ExpandableListAdapter(this, getListData());
+
+        expListView.setAdapter(mAdapter);
     }
 
     @Override
@@ -53,51 +44,32 @@ public class MyActivity extends Activity {
                 Intent i = new Intent(this, NewReminder.class);
                 startActivity(i);
                 return true;
-            case R.id.action_delete:
-                showToast("Deleting all marked memos.");
+            case R.id.action_help:
+                showToast("Displaying help.");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void showDetailedDialog(final int i){
-        View layout = getLayoutInflater().inflate(R.layout.details_dialog, null);
+    private ArrayList<ListParent> getListData() {
+        ArrayList<ListParent> list = new ArrayList<ListParent>();
 
-        //binding title and description to textviews
-        TextView descriptionTextView = (TextView) layout.findViewById(R.id.descriptionTextView) ;
-        descriptionTextView.setText(reminds.get(i).getDescription());
-        TextView titleTextView = (TextView) layout.findViewById(R.id.titleTextView);
-        titleTextView.setText(reminds.get(i).getTitle());
+        for (int i = 0; i < adapter.getDatabaseSize(); i++){
+            ListParent parent = new ListParent();
+            parent.setTitle(adapter.getReminder(i+1).getTitle());
+            parent.setChildren(new ArrayList<ListChild>());
 
-        Button deleteButton = (Button) layout.findViewById(R.id.deleteButton);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showConfirmationDialog(i);
-            }
-        });
+            ListChild child = new ListChild();
+            child.setDescription(adapter.getReminder(i+1).getDescription());
+            parent.getChildren().add(child);
 
-        Button setAlarmButton = (Button) layout.findViewById(R.id.setAlarmButton);
-        setAlarmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alarmDialog();
-            }
-        });
-        
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(layout);
-        builder.create().show();
+            list.add(parent);
+            //id seems to start at 1
+        }
+        return list;
     }
 
-    private void showConfirmationDialog(int i){
-        showToast("" + i);
-    }
-
-    private void alarmDialog(){
-
-    }
     private void showToast(String s){
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
