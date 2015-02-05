@@ -6,12 +6,12 @@ import java.util.ArrayList;
  * Created by Edward on 4/02/2015.
  * Model class for Parent rows for expandable list
  */
-public class ListParent {
-    private String title;
-    private String description;
+public class ListParent extends Reminder{
+    //private String title;
+    //private String description;
     private ArrayList<ListChild> children;
 
-    public String getTitle(){
+    /*public String getTitle(){
         return title;
     }
 
@@ -25,7 +25,7 @@ public class ListParent {
 
     public void setDescription(String description){
         this.description = description;
-    }
+    }*/
 
     public ArrayList<ListChild> getChildren(){
         return children;

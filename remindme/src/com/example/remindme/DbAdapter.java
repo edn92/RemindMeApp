@@ -66,7 +66,6 @@ public class DbAdapter extends SQLiteOpenHelper {
 
         Reminder reminder = new Reminder(Integer.parseInt(cursor.getString(0)),
                 cursor.getString(1), cursor.getString(2));
-
         return reminder;
     }
 
@@ -93,7 +92,7 @@ public class DbAdapter extends SQLiteOpenHelper {
         return reminderList;
     }
 
-    public int getDatabaseSize() {
+    /*public int getDatabaseSize() {
         List<Reminder> reminderList = new ArrayList<Reminder>();
 
         String selectQuery = "SELECT * FROM " + TABLE_REMIND + " ORDER BY " + KEY_TITLE;
@@ -113,7 +112,7 @@ public class DbAdapter extends SQLiteOpenHelper {
         }
 
         return reminderList.size();
-    }
+    }*/
 
     public int updateReminder(Reminder reminder){
         SQLiteDatabase db = this.getWritableDatabase();
