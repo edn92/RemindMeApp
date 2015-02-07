@@ -15,9 +15,9 @@ import java.util.List;
 class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private LayoutInflater inflater;
-    private List<ListParent> parents;
+    private List<Parent> parents;
 
-    public ExpandableListAdapter(Context context, List<ListParent> parents){
+    public ExpandableListAdapter(Context context, List<Parent> parents){
         this.context = context;
         this.parents = parents;
         inflater = LayoutInflater.from(context);
@@ -25,7 +25,7 @@ class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parentView){
-        final ListParent parent = parents.get(groupPosition);
+        final Parent parent = parents.get(groupPosition);
 
         convertView = inflater.inflate(R.layout.parent_rows, parentView, false);
 
@@ -37,8 +37,8 @@ class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
                              View convertView, ViewGroup parentView){
-        final ListParent parent = parents.get(groupPosition);
-        ListChild child = parent.getChildren().get(childPosition);
+        final Parent parent = parents.get(groupPosition);
+        Child child = parent.getChildren().get(childPosition);
 
         convertView = inflater.inflate(R.layout.child_rows, parentView, false);
 
