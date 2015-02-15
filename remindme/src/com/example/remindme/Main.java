@@ -1,6 +1,7 @@
 package com.example.remindme;
 
 import android.app.*;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
@@ -42,9 +43,7 @@ public class Main extends Activity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 long packedPosition = mExpListView.getExpandableListPosition(position);
                 mGroupPosition = mExpListView.getPackedPositionGroup(packedPosition);
-                int childPosition = mExpListView.getPackedPositionChild(packedPosition);
 
-                //showToast("groupPosition: " + mGroupPosition + " childPosition: " + childPosition);
                 return false;
             }
         });
@@ -121,6 +120,7 @@ public class Main extends Activity {
                 return true;
             case R.id.action_edit:
                 showToast("edit");
+                editReminderDialog();
                 return true;
             case R.id.action_delete:
                 showToast("delete");
@@ -130,6 +130,42 @@ public class Main extends Activity {
                 return true;
         }
         return super.onContextItemSelected(item);
+    }
+
+    //TODO method - dialog fragment that takes title and description into editboxes
+    //takes id to update in database
+    private void editReminderDialog(){
+        View layout = getLayoutInflater().inflate(R.layout.edit_reminder, null);
+
+        final EditText description = (EditText) layout.findViewById(R.id.descriptionEdit);
+        description.setText(mList.get(mGroupPosition).getDescription());
+
+        final EditText title = (EditText) layout.findViewById(R.id.titleEdit);
+        String s = mList.get(mGroupPosition).getTitle();
+        title.setText(s);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(layout);
+        builder.setTitle("Editing " + s);
+        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mList.get(mGroupPosition).setTitle(title.getText().toString());
+                mList.get(mGroupPosition).setDescription(description.getText().toString());
+                mList.get(mGroupPosition).getChildren().get(0).setDescription(description.getText().toString());
+                mDBAdapter.updateReminder(mList.get(mGroupPosition));
+
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.create().show();
     }
 
     //fill list with data
