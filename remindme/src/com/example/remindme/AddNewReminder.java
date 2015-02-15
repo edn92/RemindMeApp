@@ -14,27 +14,27 @@ import java.util.List;
  * Adds a new reminder to the database.
  */
 public class AddNewReminder extends Activity {
-    private String mTitle, mDescription;
-    DbAdapter mDBAdapter;
+    private String title, description;
+    DbAdapter dbAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_reminder);
 
-        mDBAdapter = new DbAdapter(this);
+        dbAdapter = new DbAdapter(this);
     }
 
     public void AddNew(View view){
-        mTitle = ((EditText)findViewById(R.id.titleEdit)).getText().toString();
-        mDescription = ((EditText)findViewById(R.id.descriptionEdit)).getText().toString();
+        title = ((EditText)findViewById(R.id.titleEdit)).getText().toString();
+        description = ((EditText)findViewById(R.id.descriptionEdit)).getText().toString();
 
-        if (mTitle.length() == 0){
-            showToast("Please add a mTitle.");
+        if (title.length() == 0){
+            showToast("Please add a title.");
         } else {
-            mDBAdapter.addReminder(new Reminder(mTitle, mDescription));
+            dbAdapter.addReminder(new Reminder(title, description));
 
-            showToast("Added new reminder '" + mTitle + "'");
+            showToast("Added new reminder '" + title + "'");
             Intent i = new Intent(this, Main.class);
             startActivity(i);
         }
@@ -42,7 +42,7 @@ public class AddNewReminder extends Activity {
 
     public void Cancel(View view){
         //temporary method for testing purposes
-        List<Reminder> reminders = mDBAdapter.getAllReminders();
+        List<Reminder> reminders = dbAdapter.getAllReminders();
 
         for (Reminder remind : reminders) {
             showToast("ID: " + remind.getId() + ", Title: " + remind.getTitle() +

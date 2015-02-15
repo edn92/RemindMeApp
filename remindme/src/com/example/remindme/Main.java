@@ -16,39 +16,39 @@ public class Main extends Activity {
     /**
      * Called when the activity is first created.
      */
-    private DbAdapter mDBAdapter;
-    private ExpandableListAdapter mAdapter;
-    private ExpandableListView mExpListView;
+    private DbAdapter dbAdapter;
+    private ExpandableListAdapter listAdapter;
+    private ExpandableListView listView;
 
-    private ArrayList<Parent> mList;
-    private int mGroupPosition;
+    private ArrayList<Parent> list;
+    private int groupPosition;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listview);
 
-        mDBAdapter = new DbAdapter(this);
+        dbAdapter = new DbAdapter(this);
 
-        mExpListView = (ExpandableListView)findViewById(R.id.list);
+        listView = (ExpandableListView)findViewById(R.id.list);
 
-        mList = new ArrayList<Parent>();
+        list = new ArrayList<Parent>();
         getListData();
-        mAdapter = new ExpandableListAdapter(this, mList);
+        listAdapter = new ExpandableListAdapter(this, list);
 
-        mExpListView.setAdapter(mAdapter);
-        mExpListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        listView.setAdapter(listAdapter);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             //retrieves position of clicked element so that database id can be obtained
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                long packedPosition = mExpListView.getExpandableListPosition(position);
-                mGroupPosition = mExpListView.getPackedPositionGroup(packedPosition);
+                long packedPosition = listView.getExpandableListPosition(position);
+                groupPosition = listView.getPackedPositionGroup(packedPosition);
 
                 return false;
             }
         });
 
-        registerForContextMenu(mExpListView);
+        registerForContextMenu(listView);
     }
 
     @Override
@@ -80,23 +80,23 @@ public class Main extends Activity {
     }
 
     private void sortByTitle() {
-        Collections.sort(mList, new Comparator<Parent>() {
+        Collections.sort(list, new Comparator<Parent>() {
             @Override
             public int compare(Parent parent1, Parent parent2) {
                 return parent1.getTitle().compareTo(parent2.getTitle());
             }
         });
-        mAdapter.notifyDataSetChanged();
+        listAdapter.notifyDataSetChanged();
     }
 
     private void sortByDescription() {
-        Collections.sort(mList, new Comparator<Parent>() {
+        Collections.sort(list, new Comparator<Parent>() {
             @Override
             public int compare(Parent parent1, Parent parent2) {
                 return parent1.getDescription().compareTo(parent2.getDescription());
             }
         });
-        mAdapter.notifyDataSetChanged();
+        listAdapter.notifyDataSetChanged();
     }
 
     private void sortByUrgency(){
@@ -107,7 +107,7 @@ public class Main extends Activity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_list_context, menu);
-        menu.setHeaderTitle(mList.get(mGroupPosition).getTitle());
+        menu.setHeaderTitle(list.get(groupPosition).getTitle());
 
         super.onCreateContextMenu(menu, v, menuInfo);
     }
@@ -124,9 +124,9 @@ public class Main extends Activity {
                 return true;
             case R.id.action_delete:
                 showToast("delete");
-                mDBAdapter.deleteReminder(mDBAdapter.getReminder(mList.get(mGroupPosition).getId()));
-                mList.remove(mGroupPosition);
-                mAdapter.notifyDataSetChanged();
+                dbAdapter.deleteReminder(dbAdapter.getReminder(list.get(groupPosition).getId()));
+                list.remove(groupPosition);
+                listAdapter.notifyDataSetChanged();
                 return true;
         }
         return super.onContextItemSelected(item);
@@ -138,10 +138,10 @@ public class Main extends Activity {
         View layout = getLayoutInflater().inflate(R.layout.edit_reminder, null);
 
         final EditText description = (EditText) layout.findViewById(R.id.descriptionEdit);
-        description.setText(mList.get(mGroupPosition).getDescription());
+        description.setText(list.get(groupPosition).getDescription());
 
         final EditText title = (EditText) layout.findViewById(R.id.titleEdit);
-        String s = mList.get(mGroupPosition).getTitle();
+        String s = list.get(groupPosition).getTitle();
         title.setText(s);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -150,12 +150,12 @@ public class Main extends Activity {
         builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mList.get(mGroupPosition).setTitle(title.getText().toString());
-                mList.get(mGroupPosition).setDescription(description.getText().toString());
-                mList.get(mGroupPosition).getChildren().get(0).setDescription(description.getText().toString());
-                mDBAdapter.updateReminder(mList.get(mGroupPosition));
+                list.get(groupPosition).setTitle(title.getText().toString());
+                list.get(groupPosition).setDescription(description.getText().toString());
+                list.get(groupPosition).getChildren().get(0).setDescription(description.getText().toString());
+                dbAdapter.updateReminder(list.get(groupPosition));
 
-                mAdapter.notifyDataSetChanged();
+                listAdapter.notifyDataSetChanged();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -170,7 +170,7 @@ public class Main extends Activity {
 
     //fill list with data
     private ArrayList<Parent> getListData() {
-        List<Reminder> dbList = mDBAdapter.getAllReminders();
+        List<Reminder> dbList = dbAdapter.getAllReminders();
 
         for (int i = 0; i < dbList.size(); i++){
             Parent parent = new Parent();
@@ -183,10 +183,10 @@ public class Main extends Activity {
             child.setDescription(parent.getDescription());
             parent.getChildren().add(child);
 
-            mList.add(parent);
+            list.add(parent);
         }
 
-        return mList;
+        return list;
     }
 
     private void showToast(String s){
