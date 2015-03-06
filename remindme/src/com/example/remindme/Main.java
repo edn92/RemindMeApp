@@ -1,16 +1,15 @@
 package com.example.remindme;
 
 import android.app.*;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.*;
 import android.widget.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class Main extends Activity {
     /**
@@ -37,6 +36,9 @@ public class Main extends Activity {
         listAdapter = new ExpandableListAdapter(this, list);
 
         listView.setAdapter(listAdapter);
+
+        //hiding default arrow temporarily
+        listView.setGroupIndicator(null);
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             //retrieves position of clicked element so that database id can be obtained
             @Override
@@ -116,20 +118,58 @@ public class Main extends Activity {
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_alarm:
-                showToast("alarm");
+                setAlarm();
                 return true;
             case R.id.action_edit:
-                showToast("edit");
                 editReminderDialog();
                 return true;
             case R.id.action_delete:
-                showToast("delete");
                 dbAdapter.deleteReminder(dbAdapter.getReminder(list.get(groupPosition).getId()));
                 list.remove(groupPosition);
                 listAdapter.notifyDataSetChanged();
                 return true;
         }
         return super.onContextItemSelected(item);
+    }
+
+    private void setAlarm(){
+        View layout = getLayoutInflater().inflate(R.layout.alarm, null);
+
+        final TimePicker timePicker = (TimePicker) layout.findViewById(R.id.timePicker);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(layout);
+        builder.setTitle("Setting reminder for: " + list.get(groupPosition).getTitle());
+        builder.setPositiveButton("Set Alarm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which){
+                AlarmManager alarmManager;
+                PendingIntent alarmIntent;
+
+                alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+                Intent intent = new Intent(Main.this, AlarmReceiver.class);
+                intent.putExtra("ID", list.get(groupPosition).getId());
+                intent.putExtra("title", list.get(groupPosition).getTitle());
+                intent.putExtra("description", list.get(groupPosition).getDescription());
+
+                alarmIntent = PendingIntent.getBroadcast(Main.this, intent.getExtras().getInt("ID") , intent, 0);
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
+                calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
+
+                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which){
+
+            }
+        });
+        builder.create().show();
     }
 
     //TODO method - dialog fragment that takes title and description into editboxes
