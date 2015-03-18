@@ -5,6 +5,8 @@
           android:icon="@drawable/ic_action_new"
           android:title="@string/add_new"
           android:showAsAction="ifRoom"  />
+    <item android:id="@+id/view_alarms"
+          android:title="View Alarms"/>
     <item android:id="@+id/action_sortTitle"
           android:title="Sort by Title"/>
     <item android:id="@+id/action_help"

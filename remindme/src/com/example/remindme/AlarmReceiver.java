@@ -9,6 +9,7 @@ import android.util.Log;
 
 /**
  * Created by Edward on 2/03/2015.
+ * Generates a notification. Vibrates for half a second, and gives a blinking LED light
  */
 public class AlarmReceiver extends BroadcastReceiver {
     private int notificationID;
@@ -17,16 +18,20 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         notificationID = intent.getExtras().getInt("ID");
 
+        long[] pattern = {400, 500};
+
         Notification notification = new Notification.Builder(context)
                 .setContentTitle(intent.getExtras().getString("title"))
                 .setContentText(intent.getExtras().getString("description"))
                 .setSmallIcon(R.drawable.ic_launcher)
+                .setVibrate(pattern)
+                .setLights(255, 500, 1000)
                 .build();
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(notificationID, notification);
 
-        Log.d("Note: ", "" + notificationID);
+        //delete alarm from alarm table
     }
 }

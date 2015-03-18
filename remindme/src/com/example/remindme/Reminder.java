@@ -12,13 +12,15 @@ public class Reminder {
 
     }
 
-    public Reminder(int id, String title, String description){
-        this.id = id;
+    //used for creating new reminders since idPK is auto-assigned
+    public Reminder(String title, String description) {
         this.title = title;
         this.description = description;
     }
 
-    public Reminder(String title, String description) {
+    //used for database retrieval from cursor
+    public Reminder(int id, String title, String description){
+        this.id = id;
         this.title = title;
         this.description = description;
     }

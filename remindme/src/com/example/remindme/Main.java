@@ -64,8 +64,12 @@ public class Main extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_new:
-                Intent i = new Intent(this, AddNewReminder.class);
-                startActivity(i);
+                Intent newReminderIntent = new Intent(this, AddNewReminder.class);
+                startActivity(newReminderIntent);
+                return true;
+            case R.id.view_alarms:
+                Intent displayAlarmsIntent = new Intent(this, DisplayAlarms.class);
+                startActivity(displayAlarmsIntent);
                 return true;
             case R.id.action_sortTitle:
                 sortByTitle();
