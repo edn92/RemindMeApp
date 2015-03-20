@@ -13,7 +13,7 @@ import java.util.List;
  * Created by Edward on 6/01/2015.
  */
 public class DbAdapter extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
 
     private static final String DATABASE_NAME = "remindDatabase";
 
@@ -26,7 +26,7 @@ public class DbAdapter extends SQLiteOpenHelper {
     private static final String KEY_TITLE = "title";
     private static final String KEY_DESCRIPTION = "description";
 
-    //alarm column names
+    //set_alarm column names
     private static final String KEY_ALARMID = "id";
     private static final String KEY_ALARMTITLE = "title";
     private static final String KEY_ALARMTIME = "time";
@@ -41,8 +41,8 @@ public class DbAdapter extends SQLiteOpenHelper {
         String CREATE_REMINDS_TABLE = "CREATE TABLE " + TABLE_REMINDERS + "(" + KEY_ID
                 + " INTEGER PRIMARY KEY, " + KEY_TITLE + " TEXT," + KEY_DESCRIPTION + " TEXT)";
         String CREATE_ALARMS_TABLE = "CREATE TABLE " + TABLE_ALARMS + "(" + KEY_ALARMID
-                + " INTEGER PRIMARY KEY, " + KEY_ALARMTITLE + " TEXT," + KEY_ALARMTIME + " TEXT"
-                + KEY_ALARMINTENTID + "INTEGER)";
+                + " INTEGER PRIMARY KEY, " + KEY_ALARMTITLE + " TEXT," + KEY_ALARMTIME + " TEXT, "
+                + KEY_ALARMINTENTID + " INTEGER)";
         db.execSQL(CREATE_REMINDS_TABLE);
         db.execSQL(CREATE_ALARMS_TABLE);
     }
@@ -135,9 +135,12 @@ public class DbAdapter extends SQLiteOpenHelper {
     public Alarm getAlarm(int id) {
         SQLiteDatabase db= this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_ALARMS, new String[] { KEY_ALARMID,
+        String selectQuery = "SELECT * FROM " + TABLE_ALARMS + " WHERE " + KEY_ALARMID + "= " + id;
+        //select * from alarms where id = id
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        /*Cursor cursor = db.query(TABLE_ALARMS, new String[] { KEY_ALARMID,
             KEY_ALARMTITLE, KEY_ALARMTIME, KEY_ALARMINTENTID }, KEY_ALARMID + "=?",
-            new String[] {String.valueOf(id) }, null, null, null, null);
+            new String[] {String.valueOf(id) }, null, null, null, null);*/
         if (cursor != null)
             cursor.moveToFirst();
 
@@ -163,5 +166,11 @@ public class DbAdapter extends SQLiteOpenHelper {
         }
 
         return alarmList;
+    }
+
+    public void deleteAlarm(Alarm alarm) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_ALARMS, KEY_ID + " = ?",
+                new String[] { String.valueOf(alarm.getId()) });
     }
  }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.*;
 import android.widget.*;
 
@@ -25,7 +24,7 @@ public class Main extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.listview);
+        setContentView(R.layout.exp_listview);
 
         dbAdapter = new DbAdapter(this);
 
@@ -137,7 +136,7 @@ public class Main extends Activity {
     }
 
     private void setAlarm(){
-        View layout = getLayoutInflater().inflate(R.layout.alarm, null);
+        View layout = getLayoutInflater().inflate(R.layout.set_alarm, null);
 
         final TimePicker timePicker = (TimePicker) layout.findViewById(R.id.timePicker);
 
@@ -158,12 +157,27 @@ public class Main extends Activity {
 
                 alarmIntent = PendingIntent.getBroadcast(Main.this, intent.getExtras().getInt("ID") , intent, 0);
 
+                int hour = timePicker.getCurrentHour();
+                int minute = timePicker.getCurrentMinute();
+
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(System.currentTimeMillis());
-                calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
-                calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
+                calendar.set(Calendar.HOUR_OF_DAY, hour);
+                calendar.set(Calendar.MINUTE, minute);
 
                 alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+
+                String s;
+                if (hour < 10){
+                    s = "Alarm set to 0" + hour + ":" + minute;
+                } else {
+                    s = "Alarm set to " + hour + ":" + minute;
+                }
+
+                showToast(s);
+                //add to the alarm table in database
+                dbAdapter.addAlarm(new Alarm(intent.getExtras().getString("title"),
+                        s, intent.getExtras().getInt("ID")));
             }
         });
 

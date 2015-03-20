@@ -13,6 +13,7 @@ import android.util.Log;
  */
 public class AlarmReceiver extends BroadcastReceiver {
     private int notificationID;
+    DbAdapter dbAdapter;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -32,6 +33,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         notificationManager.notify(notificationID, notification);
 
-        //delete alarm from alarm table
+        dbAdapter = new DbAdapter(context);
+        dbAdapter.deleteAlarm(dbAdapter.getAlarm(intent.getExtras().getInt("ID")));
+        //delete set_alarm from set_alarm table
     }
 }
